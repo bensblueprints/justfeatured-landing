@@ -1,0 +1,5 @@
+.netlify/
+node_modules/
+data/
+publications.csv
+convert-csv.js
