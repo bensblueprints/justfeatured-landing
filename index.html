@@ -568,7 +568,7 @@ body{font-family:var(--font-body);color:var(--text);background:var(--white);over
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4L12 14.01l-3-3"/></svg>1-5 day turnaround</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4L12 14.01l-3-3"/></svg>All genres supported</li>
         </ul>
-        <button class="tier-btn" onclick="handleTierClick()">View Publications</button>
+        <button class="tier-btn" onclick="handleTierClick(150,500)">View Publications</button>
       </div>
       <div class="tier-card featured reveal stagger-2">
         <div class="tier-name">Professional</div>
@@ -580,7 +580,7 @@ body{font-family:var(--font-body);color:var(--text);background:var(--white);over
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4L12 14.01l-3-3"/></svg>DoFollow links available</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4L12 14.01l-3-3"/></svg>Guaranteed indexing</li>
         </ul>
-        <button class="tier-btn" onclick="handleTierClick()">View Publications</button>
+        <button class="tier-btn" onclick="handleTierClick(500,5000)">View Publications</button>
       </div>
       <div class="tier-card reveal stagger-3">
         <div class="tier-name">Enterprise</div>
@@ -592,7 +592,7 @@ body{font-family:var(--font-body);color:var(--text);background:var(--white);over
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4L12 14.01l-3-3"/></svg>Social post bundles</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4L12 14.01l-3-3"/></svg>Dedicated account manager</li>
         </ul>
-        <button class="tier-btn" onclick="handleTierClick()">View Publications</button>
+        <button class="tier-btn" onclick="handleTierClick(5000,200000)">View Publications</button>
       </div>
     </div>
   </div>
@@ -613,6 +613,14 @@ body{font-family:var(--font-body);color:var(--text);background:var(--white);over
       </div>
       <select class="market-filter" id="genreFilter" onchange="filterTable()"><option value="">All Genres</option></select>
       <select class="market-filter" id="regionFilter" onchange="filterTable()"><option value="">All Regions</option></select>
+      <select class="market-filter" id="budgetFilter" onchange="filterTable()">
+        <option value="">All Budgets</option>
+        <option value="150-500">$150 - $500</option>
+        <option value="500-1000">$500 - $1,000</option>
+        <option value="1000-5000">$1,000 - $5,000</option>
+        <option value="5000-25000">$5,000 - $25,000</option>
+        <option value="25000-200000">$25,000+</option>
+      </select>
       <select class="market-filter" id="sortFilter" onchange="filterTable()">
         <option value="price-desc">Price: High to Low</option>
         <option value="price-asc">Price: Low to High</option>
@@ -778,8 +786,16 @@ function closeGate() {
   document.body.style.overflow = '';
 }
 
-function handleTierClick() {
+function handleTierClick(minPrice, maxPrice) {
   if (!isUnlocked) { showGate(); return; }
+  if (minPrice !== undefined && maxPrice !== undefined) {
+    document.getElementById('budgetFilter').value = minPrice + '-' + maxPrice;
+    document.getElementById('searchInput').value = '';
+    document.getElementById('genreFilter').value = '';
+    document.getElementById('regionFilter').value = '';
+    document.getElementById('sortFilter').value = 'price-desc';
+    filterTable();
+  }
   document.getElementById('marketplace').scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -1049,11 +1065,19 @@ function getFilteredPubs() {
   var search = document.getElementById('searchInput').value.toLowerCase();
   var genre = document.getElementById('genreFilter').value;
   var region = document.getElementById('regionFilter').value;
+  var budget = document.getElementById('budgetFilter').value;
   var sort = document.getElementById('sortFilter').value;
+  var budgetMin = 0, budgetMax = Infinity;
+  if (budget) {
+    var parts = budget.split('-');
+    budgetMin = parseInt(parts[0]);
+    budgetMax = parseInt(parts[1]);
+  }
   var filtered = allPubs.filter(function(p) {
     if (search && p.name.toLowerCase().indexOf(search) === -1 && p.genre.toLowerCase().indexOf(search) === -1) return false;
     if (genre && p.genre !== genre) return false;
     if (region && p.region !== region) return false;
+    if (budget && (p.price < budgetMin || p.price > budgetMax)) return false;
     return true;
   });
   switch(sort) {
