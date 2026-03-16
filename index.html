@@ -943,6 +943,7 @@ function openCheckout() {
     '<form class="checkout-form" onsubmit="return submitOrder(event)">' +
       '<label>Full Name</label><input type="text" id="checkoutName" required placeholder="Your name">' +
       '<label>Email</label><input type="email" id="checkoutEmail" required value="' + email + '" placeholder="your@email.com">' +
+      '<label>Phone Number</label><input type="tel" id="checkoutPhone" required placeholder="+1 (555) 000-0000">' +
       '<label>Notes (optional)</label><textarea id="checkoutNotes" placeholder="Any special requests or details about your story..."></textarea>' +
       '<button type="submit" class="checkout-submit" id="checkoutBtn">Place Order — $' + grandTotal.toLocaleString() + '</button>' +
     '</form>';
@@ -973,6 +974,7 @@ function submitOrder(e) {
     action: 'create_order',
     name: document.getElementById('checkoutName').value,
     email: document.getElementById('checkoutEmail').value,
+    phone: document.getElementById('checkoutPhone').value,
     items: cart,
     total: total + writingFee,
     publicationFees: total,

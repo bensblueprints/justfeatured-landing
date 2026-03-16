@@ -88,7 +88,7 @@ function orderConfirmationHtml(order) {
           <h2 style="color:#1a1a2e;margin:0 0 8px;font-size:22px;">Thank you for your order, ${order.name}!</h2>
           <p style="color:#4a4a68;line-height:1.7;margin:0 0 24px;font-size:15px;">
             We've received your order and our team will begin working on your placements shortly.
-            You'll receive updates at <strong>${order.email}</strong>.
+            You'll receive updates at <strong>${order.email}</strong>${order.phone ? ` or <strong>${order.phone}</strong>` : ''}.
           </p>
 
           <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #eee;border-radius:6px;overflow:hidden;margin-bottom:24px;">
@@ -151,7 +151,8 @@ function orderNotificationHtml(order) {
         </td></tr>
         <tr><td style="padding:30px 40px;">
           <p style="margin:0 0 6px;font-size:14px;color:#666;">Customer</p>
-          <p style="margin:0 0 16px;font-size:16px;color:#333;font-weight:600;">${order.name} (${order.email})</p>
+          <p style="margin:0 0 4px;font-size:16px;color:#333;font-weight:600;">${order.name} (${order.email})</p>
+          ${order.phone ? `<p style="margin:0 0 16px;font-size:14px;color:#333;">Phone: ${order.phone}</p>` : ''}
 
           <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #eee;border-radius:4px;overflow:hidden;margin-bottom:20px;">
             <tr style="background:#f5f5f5;">
